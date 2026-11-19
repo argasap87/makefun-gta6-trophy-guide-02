@@ -1,7 +1,100 @@
-body { font-family: Arial, sans-serif; margin: 24px; color: #222; }
-header { display: flex; justify-content: space-between; align-items: baseline; }
-.controls { display: flex; gap: 16px; margin: 12px 0; align-items: center; }
-.import input { font-size: 12px; }
-table { border-collapse: collapse; width: 100%; }
-th, td { border-bottom: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; white-space: pre-line; }
-th { background: #f2f2f2; }
+/* TROPHY RADIO — GTA VI trophy guide & tracker. Off-white board, dense tracklist,
+   tier colours, teal for in-progress, red "!" for missable. No external assets. */
+* { box-sizing: border-box; }
+body { margin: 0; background: #F9F9F9; color: #1c1c1c; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.35; }
+h1 { font-size: 26px; letter-spacing: 2px; margin: 0; }
+h2 { font-size: 18px; margin: 14px 0 6px; }
+
+/* --- top bar + station dial --- */
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 12px 20px 10px; background: #111; color: #F9F9F9; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark { width: 44px; height: 44px; border-radius: 50%; background: #0E7C7B; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; border: 3px solid #FFC84A; flex: none; }
+.tagline { margin: 2px 0 0; color: #bbb; font-size: 12px; font-style: italic; }
+.dial { width: 380px; flex: none; }
+.dial-numbers { font-size: 24px; font-weight: 700; }
+.dial-of { font-size: 16px; color: #bbb; }
+.dial-label { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-left: 8px; }
+.dial-bar { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin: 5px 0 3px; }
+.dial-fill { height: 100%; width: 0; background: linear-gradient(90deg, #0E7C7B, #FFC84A); }
+.dial-pct { font-size: 11px; color: #bbb; }
+
+/* --- skyline strip: all 55 at a glance --- */
+.skyline { display: flex; gap: 3px; padding: 8px 20px; background: #ececec; border-bottom: 2px solid #111; }
+.sky-cell { flex: 1; height: 22px; border-radius: 3px; border: 1px solid rgba(0,0,0,.25); cursor: pointer; padding: 0; }
+.sky-cell.earned { box-shadow: inset 0 0 0 2px #111; }
+.sky-cell.selected { outline: 2px solid #0E7C7B; outline-offset: 1px; }
+.grade-platinum { background: #E5E4FF; }
+.grade-gold { background: #FFC84A; }
+.grade-silver { background: #B0C4DE; }
+.grade-bronze { background: #D28C58; }
+.sky-cell:not(.earned) { opacity: .45; }
+.sky-legend { font-size: 11px; color: #666; padding: 2px 20px 6px; background: #ececec; }
+
+/* --- controls --- */
+.controls { padding: 10px 20px; border-bottom: 1px solid #ddd; background: #fff; }
+.views { display: flex; gap: 6px; margin-bottom: 8px; }
+.view-btn { border: 2px solid #111; background: #fff; padding: 6px 14px; font-weight: 700; cursor: pointer; border-radius: 4px; }
+.view-btn.active { background: #111; color: #fff; }
+.miss-count { background: #c0392b; color: #fff; border-radius: 8px; padding: 0 6px; font-size: 11px; }
+.filters { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+.fld { display: flex; flex-direction: column; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #555; gap: 2px; }
+.fld select, .fld input[type="search"] { font-size: 13px; padding: 5px 6px; border: 1px solid #aaa; border-radius: 3px; background: #fff; }
+.fld.search input { width: 220px; }
+.fld.check { flex-direction: row; align-items: center; gap: 5px; text-transform: none; font-size: 13px; letter-spacing: 0; color: #1c1c1c; padding-bottom: 5px; }
+button, .import-btn { font-size: 13px; padding: 6px 12px; border: 1px solid #111; border-radius: 3px; background: #fff; cursor: pointer; font-weight: 700; }
+button:hover, .import-btn:hover { background: #eee; }
+.import-btn input { display: none; }
+
+/* --- main views --- */
+main { padding: 0 20px 12px; }
+.view { display: none; }
+.view.active { display: block; }
+.board { display: flex; gap: 16px; align-items: flex-start; margin-top: 12px; }
+.tracklist { border-collapse: collapse; width: 100%; background: #fff; }
+.tracklist th, .tracklist td { border-bottom: 1px solid #e3e3e3; padding: 5px 7px; text-align: left; vertical-align: top; }
+.tracklist th { background: #111; color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+.tracklist tbody tr { cursor: pointer; }
+.tracklist tbody tr:hover { background: #fdf3d8; }
+.tracklist tbody tr.selected { background: #e6f4f3; }
+.tracklist tbody tr.earned-row td { color: #555; }
+.c-box { width: 30px; text-align: center; }
+.c-num { width: 30px; color: #888; }
+.c-flag { width: 30px; text-align: center; }
+.tracklist input[type="checkbox"] { width: 16px; height: 16px; accent-color: #0E7C7B; cursor: pointer; }
+.t-name { font-weight: 700; }
+.t-desc { font-size: 12px; color: #555; }
+.t-hidden { font-style: italic; color: #888; }
+.grade-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(0,0,0,.4); vertical-align: -1px; margin-right: 4px; }
+.grade-label { font-size: 12px; text-transform: capitalize; }
+.kind-tag { font-size: 11px; background: #eee; border-radius: 3px; padding: 1px 6px; text-transform: capitalize; white-space: nowrap; }
+.flag-badge { display: inline-block; background: #c0392b; color: #fff; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; line-height: 18px; text-align: center; font-size: 12px; }
+.board-note { font-size: 12px; color: #666; margin: 8px 0 0; }
+
+/* --- guide pane --- */
+.guide-pane { width: 380px; flex: none; background: #fff; border: 2px solid #111; border-radius: 6px; padding: 14px; position: sticky; top: 8px; max-height: calc(100vh - 40px); overflow-y: auto; }
+.guide-pane .pane-empty { color: #777; font-style: italic; margin: 0; }
+.guide-pane h3 { margin: 0 0 2px; font-size: 19px; }
+.guide-pane .pane-grade { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin: 0 0 8px; }
+.guide-pane .pane-desc { font-style: italic; border-left: 3px solid #0E7C7B; padding-left: 8px; margin: 0 0 10px; }
+.guide-pane .pane-guide { margin: 0 0 10px; }
+.guide-pane .pane-count { font-weight: 700; color: #0E7C7B; margin: 0 0 10px; }
+.guide-pane .pane-miss { background: #fdecea; border: 1px solid #c0392b; border-radius: 4px; padding: 8px; margin: 0 0 10px; font-size: 13px; }
+.guide-pane .pane-sources { font-size: 12px; color: #555; border-top: 1px solid #ddd; padding-top: 8px; margin: 0; }
+.guide-pane .pane-sources b { color: #1c1c1c; }
+.guide-pane .pane-check { margin-top: 10px; }
+.guide-pane .pane-check label { font-weight: 700; cursor: pointer; }
+
+/* --- roadmap / missables --- */
+.roadmap-intro { max-width: 900px; color: #444; }
+.stage { background: #fff; border: 1px solid #ddd; border-left: 6px solid #0E7C7B; border-radius: 4px; padding: 12px 16px; margin: 10px 0; }
+.stage h3 { margin: 0 0 4px; }
+.stage p { margin: 0 0 8px; color: #444; }
+.stage ul { margin: 0; padding-left: 18px; }
+.stage li { margin: 3px 0; }
+.stage .chip { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 3px; padding: 1px 6px; margin-right: 4px; }
+.chip.done { background: #0E7C7B; color: #fff; }
+.chip.todo { background: #eee; color: #333; }
+.miss-table { margin-top: 10px; }
+.miss-rule { font-size: 13px; }
+
+footer { padding: 10px 20px 16px; font-size: 12px; color: #666; border-top: 1px solid #ddd; }

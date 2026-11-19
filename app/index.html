@@ -3,23 +3,102 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GTA VI trophy checklist</title>
+<title>TROPHY RADIO — GTA VI trophy guide &amp; tracker (55 trophies)</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>GTA VI trophy checklist</h1>
-  <p id="progress">0 of 55 earned</p>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">TR</div>
+    <div>
+      <h1>TROPHY RADIO</h1>
+      <p class="tagline">Tune your hunt — every trophy a track on the board.</p>
+    </div>
+  </div>
+  <div class="dial" id="dial" aria-label="Progress toward platinum">
+    <div class="dial-numbers"><span id="earnedCount">0</span><span class="dial-of">/ 55</span><span class="dial-label">toward platinum</span></div>
+    <div class="dial-bar"><div class="dial-fill" id="dialFill"></div></div>
+    <div class="dial-pct" id="dialPct">0% — 55 tracks left</div>
+  </div>
 </header>
-<div class="controls">
-  <label>Grade <select id="grade"><option value="all">All</option><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option><option value="bronze">Bronze</option></select></label>
-  <button id="export" type="button">Export progress</button>
-  <label class="import">Import progress <input id="import" type="file" accept="application/json"></label>
-</div>
-<table>
-  <thead><tr><th>Earned</th><th>Trophy</th><th>Grade</th><th>How to get it</th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
+
+<section class="skyline" id="skyline" aria-label="Skyline of all 55 trophies"></section>
+
+<nav class="controls" aria-label="Guide controls">
+  <div class="views" role="tablist" aria-label="Views">
+    <button type="button" class="view-btn active" data-view="checklist" role="tab">Checklist</button>
+    <button type="button" class="view-btn" data-view="roadmap" role="tab">Roadmap to Platinum</button>
+    <button type="button" class="view-btn" data-view="missables" role="tab">Missables <span class="miss-count" id="missCount"></span></button>
+  </div>
+  <div class="filters">
+    <label class="fld">Kind
+      <select id="kindFilter">
+        <option value="all">All kinds</option>
+        <option value="story">Story</option>
+        <option value="collectibles">Collectibles</option>
+        <option value="activities">Activities</option>
+        <option value="online">Online</option>
+        <option value="missable">Missable only</option>
+      </select>
+    </label>
+    <label class="fld">Grade
+      <select id="gradeFilter">
+        <option value="all">All grades</option>
+        <option value="platinum">Platinum</option>
+        <option value="gold">Gold</option>
+        <option value="silver">Silver</option>
+        <option value="bronze">Bronze</option>
+      </select>
+    </label>
+    <label class="fld">State
+      <select id="earnedFilter">
+        <option value="all">Earned + unearned</option>
+        <option value="earned">Earned only</option>
+        <option value="unearned">Unearned only</option>
+      </select>
+    </label>
+    <label class="fld search">Search
+      <input id="search" type="search" placeholder="trophy or mission name…" autocomplete="off">
+    </label>
+    <label class="fld check"><input id="spoiler" type="checkbox"> Spoilers off</label>
+    <button id="exportBtn" type="button">Export</button>
+    <label class="import-btn">Import <input id="importFile" type="file" accept="application/json,.json"></label>
+  </div>
+</nav>
+
+<main>
+  <section id="view-checklist" class="view active">
+    <div class="board">
+      <table class="tracklist">
+        <thead><tr><th class="c-box" aria-label="Earned"></th><th class="c-num">#</th><th>Trophy</th><th>Grade</th><th>Kind</th><th class="c-flag">!</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <aside class="guide-pane" id="guidePane" aria-label="Trophy guide">
+        <p class="pane-empty">Click any track to open its guide here — official name, description, grade, your guide and its sources.</p>
+      </aside>
+    </div>
+    <p class="board-note" id="rowCount"></p>
+  </section>
+
+  <section id="view-roadmap" class="view">
+    <h2>Roadmap to Platinum — built only from the official descriptions</h2>
+    <p class="roadmap-intro">Five stages, in order. Every stage lists only what the official trophy descriptions name: story chapters and missions, collectibles with their counts, activities and money. Nothing here is guessed — where the description does not pin a place or step down, the guide says so.</p>
+    <div id="roadmapStages"></div>
+  </section>
+
+  <section id="view-missables" class="view">
+    <h2>Missables — 19 flagged trophies</h2>
+    <p class="roadmap-intro">A trophy is flagged when its official description ties it to a one-time story event (a named mission, a chapter, a contact's final mission, a stranger strand) or to a choice. Each flag states the rule that flagged it. <strong>Missable only if that moment cannot be replayed</strong> — whether mission replay exists is not yet checked in-game, so finish these before the finale to be safe.</p>
+    <table class="tracklist miss-table">
+      <thead><tr><th class="c-box" aria-label="Earned"></th><th>Trophy</th><th>Grade</th><th>The rule that flagged it</th></tr></thead>
+      <tbody id="missRows"></tbody>
+    </table>
+  </section>
+</main>
+
+<footer>
+  <p>55 trophies: 1 platinum · 2 gold · 6 silver · 46 bronze · 28 hidden on PlayStation until earned. Names, descriptions and grades as PlayStation publishes them (Exophase / PSNProfiles). Guides are original to this entry and cite their sources. No Rockstar logo, artwork or game screenshot. Works fully offline — no network requests.</p>
+</footer>
 <script type="module" src="app.js"></script>
 </body>
 </html>
